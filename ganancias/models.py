@@ -17,11 +17,28 @@ DEDUCCION_TIPO = [
     ('MA', 'manual'),
 ]
 
+CONSIDERACION_SAC = [
+    ('AN', 'Anual'),
+    ('JD', 'Junio - Diciembre'),
+]
+
+HABITUALIDAD = [
+    ('HA', 'Habitual'),
+    ('NH', 'No Habitual'),
+]
+
+TIPO_CONCEPTO = [
+    ('REM', 'Remunerativo'),
+    ('NOREM', 'No Remunerativo'),
+    ('APOR', 'Aporte'),
+]
+
 
 class Empresa(models.Model):
     name = models.CharField(max_length=120, verbose_name='Razon Social', validators=[validate_name])
     cuit = models.CharField(max_length=11, validators=[validate_cuit])
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    take_sac = models.CharField(max_length=2, default='AN', verbose_name="Consideración SAC")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -50,6 +67,12 @@ class Empleado(models.Model):
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
     name = models.CharField(max_length=120, verbose_name='Nombre', validators=[validate_name])
     cuil = models.CharField(max_length=11, validators=[validate_cuil])
+    jubilado = models.BooleanField(default=False)
+    zona_patagonica = models.BooleanField(default=False, verbose_name="Zona Patagónica")
+    fecha_baja = models.DateField(blank=True, null=True, verbose_name='Fecha de Baja')
+    tope_35_anual = models.BooleanField(default=True, verbose_name="Tope Límite 35% Liq. Anual")
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
         return f'{self.empresa.name} - L.{self.leg}: {self.name}'
@@ -69,17 +92,14 @@ class Empleado(models.Model):
         unique_together = (('leg', 'empresa'),)
 
 
-class TipoConcepto(models.Model):
-    code = models.CharField(primary_key=True, unique=True, max_length=20, verbose_name='Código Tipo')
-    name = models.CharField(max_length=100, verbose_name='Tipo Concepto', null=True, blank=True)
-
-    def __str__(self) -> str:
-        return self.name
-
-
 class Concepto(models.Model):
-    tipo_concepto = models.ForeignKey(TipoConcepto, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, verbose_name='Tipo Concepto', null=True, blank=True)
+    tipo_concepto = models.CharField(max_length=5, choices=TIPO_CONCEPTO, default='REM')
+    periodicidad = models.CharField(max_length=2, choices=DEDUCCION_PERIODO, default='ME')
+    name = models.CharField(max_length=100, verbose_name='Nombre', null=True, blank=True)
+    habitualidad = models.CharField(max_length=2, default='HA')
+    exento = models.BooleanField(default=False)
+    others = models.BooleanField(default=False, verbose_name='Otros Empleos')
+    extras = models.JSONField(default=dict)
 
     def __str__(self) -> str:
         return self.name
@@ -130,8 +150,6 @@ class Deduccion(models.Model):
     name = models.CharField(max_length=120, verbose_name='Nombre')
     periodicidad = models.CharField(max_length=2, choices=DEDUCCION_PERIODO, default='ME')
     tope = models.ForeignKey(Tope, on_delete=models.SET_NULL, blank=True, null=True)
-    informa_en_unidad = models.BooleanField(default=False, verbose_name="¿Informa en unidad?")
-    es_pago_ac = models.BooleanField(default=False, verbose_name="¿Es pago a cuenta?")
     validity_from = models.DateField(blank=True, null=True, verbose_name='Vigencia desde')
     validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
 

@@ -62,3 +62,30 @@ DEDUCCIONES = {
         '12': 'Ded Especial Incrementada Rango 2 - (Tabla Anexo IV)',
     }
 }
+
+DEDUCCIONES_ANUALES = {
+    'deduccion': {
+        '2': 'Primas de Seguro para el caso de muerte',
+        '7': 'Gastos Médicos y Paramédicos',
+        '23': 'Primas de Ahorro correspondientes a Seguros Mixtos',
+        '24': 'Aportes correspondientes a Planes de Seguro de Retiro Privados',
+        '25': 'Adquisición de Cuotapartes de Fondos Comunes de Inversión con fines de retiro',
+    },
+    'retPerPago': {
+        '6': 'Impuestos sobre Créditos y Débitos en cuenta Bancaria',
+        '12': 'Retenciones y Percepciones Aduaneras',
+        '13': 'Pago a Cuenta - Compras en el Exterior',
+        '14': 'Impuesto sobre los Movimientos de Fondos Propios o de Terceros',
+        '15': 'Pago a Cuenta - Compra de Paquetes Turísticos',
+        '16': 'Pago a Cuenta - Compra de Pasajes',
+        '17': 'Pago a Cuenta - Compra de Moneda Extranjera para Turismo / Transf. al Exterior',
+        '18': 'Pago a Cuenta - Adquisición de moneda extranjera para tenencia de billetes extranjeros',
+        '19': 'Pago a Cuenta - Compra de Paquetes Turísticos en efectivo',
+        '20': 'Pago a Cuenta - Compra de Pasajes en efectivo',
+        '27': 'Pago a Cuenta - RG 4815 - Ley 27541 - Art. 35 inc. a)',
+        '28': 'Pago a Cuenta - RG 4815 - Ley 27541 - Art. 35 inc. b)',
+        '29': 'Pago a Cuenta - RG 4815 - Ley 27541 - Art. 35 inc. c)',
+        '30': 'Pago a Cuenta - RG 4815 - Ley 27541 - Art. 35 inc. e)',
+        '31': 'Pago a Cuenta - RG 4815 - Ley 27541 - Art. 35 inc. e)',
+    },
+}

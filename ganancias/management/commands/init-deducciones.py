@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from ganancias.models import Deduccion
-from ganancias.tablas.deducciones import DEDUCCIONES
+from ganancias.tablas.deducciones import DEDUCCIONES, DEDUCCIONES_ANUALES
 
 
 class Command(BaseCommand):
@@ -14,7 +14,10 @@ class Command(BaseCommand):
             ded_tipo = Deduccion.get_tipo_code(deduccion)
             for ded_cod, ded_name in DEDUCCIONES[deduccion].items():
                 if Deduccion.objects.filter(tipo=ded_tipo, codigo_siradig=ded_cod).count() == 0:
-                    Deduccion.objects.create(tipo=ded_tipo, codigo_siradig=ded_cod, name=ded_name)
+                    if DEDUCCIONES_ANUALES.get(deduccion) and DEDUCCIONES_ANUALES.get(deduccion).get(ded_cod):
+                        Deduccion.objects.create(tipo=ded_tipo, codigo_siradig=ded_cod, name=ded_name, periodicidad='AN')
+                    else:
+                        Deduccion.objects.create(tipo=ded_tipo, codigo_siradig=ded_cod, name=ded_name)
                     self.stdout.write(self.style.SUCCESS(f'Deduccion {ded_name} agregada'))
                 else:
                     # Actualizar el nombre

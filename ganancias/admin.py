@@ -1,11 +1,16 @@
 from django.contrib import admin
 
-from ganancias.models import Concepto, ConceptoLiquidado, Deduccion, Empleado, Empresa, TipoConcepto
+from ganancias.models import Concepto, ConceptoLiquidado, Deduccion, Empleado, Empresa
 
 
-admin.site.register(Concepto)
 admin.site.register(ConceptoLiquidado)
-admin.site.register(TipoConcepto)
+
+
+@admin.register(Concepto)
+class ConceptoAdmin(admin.ModelAdmin):
+    list_display = ("name", "tipo_concepto", "periodicidad", "habitualidad")
+    list_filter = ("tipo_concepto", 'habitualidad')
+    list_per_page = 30
 
 
 @admin.register(Empleado)
