@@ -1,6 +1,9 @@
-from django.core.validators import MinLengthValidator
+from crum import get_current_user
+from django.contrib.auth.models import User
 from django.db import models
+from django.forms.models import model_to_dict
 
+from ganancias.validators import validate_cuil, validate_cuit, validate_name
 
 DEDUCCION_PERIODO = [
     ('AN', 'Anual'),
@@ -19,15 +22,56 @@ DEDUCCION_TOPE = [
 ]
 
 
-class Empleado(models.Model):
-    name = models.CharField(max_length=120, verbose_name='Nombre', null=True, blank=True)
-    cuil = models.CharField(max_length=11, validators=[MinLengthValidator(11)])
+class Empresa(models.Model):
+    name = models.CharField(max_length=120, verbose_name='Razon Social', validators=[validate_name])
+    cuit = models.CharField(max_length=11, validators=[validate_cuit])
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return f'{self.name} - {self.cuil}'
+        return self.name
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if not hasattr(self, 'user'):
+            user = get_current_user()
+            if user and not user.pk:
+                user = None
+
+            self.user = user
+
+        self.cuit = validate_cuit(self.cuit)
+        self.name = validate_name(self.name)
+        return super().save(force_insert, force_update, using, update_fields)
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+
+
+class Empleado(models.Model):
+    leg = models.IntegerField()
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+    name = models.CharField(max_length=120, verbose_name='Nombre', validators=[validate_name])
+    cuil = models.CharField(max_length=11, validators=[validate_cuil])
+    area = models.CharField(max_length=120, verbose_name='Área de Trabajo', null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f'{self.empresa.name} - L.{self.leg}: {self.name}'
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['empresa'] = self.empresa.name
+        return item
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.cuil = validate_cuil(self.cuil)
+        self.name = validate_name(self.name)
+        return super().save(force_insert, force_update, using, update_fields)
 
     class Meta:
-        ordering = ['name']
+        ordering = ['empresa__name', 'leg']
+        unique_together = (('leg', 'empresa'),)
 
 
 class TipoConcepto(models.Model):
