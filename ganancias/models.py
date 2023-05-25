@@ -11,14 +11,10 @@ DEDUCCION_PERIODO = [
 ]
 
 DEDUCCION_TIPO = [
-    ('DG', 'Deducción General'),
-    ('DP', 'Deducción Personal'),
-]
-
-DEDUCCION_TOPE = [
-    (0, 'Sin Tope'),
-    (1, r'Tope 5% Ganan 1'),
-    (2, r'Tope 5% Ganan 2'),
+    ('DE', 'deduccion'),
+    ('CF', 'cargaFamilia'),
+    ('PC', 'retPerPago'),
+    ('MA', 'manual'),
 ]
 
 
@@ -54,7 +50,6 @@ class Empleado(models.Model):
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
     name = models.CharField(max_length=120, verbose_name='Nombre', validators=[validate_name])
     cuil = models.CharField(max_length=11, validators=[validate_cuil])
-    area = models.CharField(max_length=120, verbose_name='Área de Trabajo', null=True, blank=True)
 
     def __str__(self) -> str:
         return f'{self.empresa.name} - L.{self.leg}: {self.name}'
@@ -112,17 +107,61 @@ class ConceptoLiquidado(models.Model):
         return f'{self.empleado.name} - {self.concepto.name} - $ {self.importe}'
 
 
-class Deduccion(models.Model):
-    codigo_siradig = models.PositiveSmallIntegerField(primary_key=True, unique=True, verbose_name='Código Siradig')
+class Tope(models.Model):
     name = models.CharField(max_length=120, verbose_name='Nombre')
-    tipo = models.CharField(max_length=2, choices=DEDUCCION_TIPO, default='DG')
+    descripcion = models.CharField(max_length=120, blank=True, null=True, verbose_name='Descripción')
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class TopeValor(models.Model):
+    tope = models.ForeignKey(Tope, on_delete=models.CASCADE)
+    periodo = models.DateField()
+    valor = models.FloatField(default=0.0)
+
+    def __str__(self) -> str:
+        return f'{self.tope.name} - {self.periodo.strftime("%Y/%m")} - $ {self.valor}'
+
+
+class Deduccion(models.Model):
+    tipo = models.CharField(max_length=2, choices=DEDUCCION_TIPO, default='DE')
+    codigo_siradig = models.CharField(max_length=20, verbose_name='Código Siradig')
+    name = models.CharField(max_length=120, verbose_name='Nombre')
     periodicidad = models.CharField(max_length=2, choices=DEDUCCION_PERIODO, default='ME')
-    tope = models.PositiveSmallIntegerField(choices=DEDUCCION_TOPE, default=0)
+    tope = models.ForeignKey(Tope, on_delete=models.SET_NULL, blank=True, null=True)
     informa_en_unidad = models.BooleanField(default=False, verbose_name="¿Informa en unidad?")
     es_pago_ac = models.BooleanField(default=False, verbose_name="¿Es pago a cuenta?")
+    validity_from = models.DateField(blank=True, null=True, verbose_name='Vigencia desde')
+    validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
 
     class Meta:
+        ordering = ['tipo', 'codigo_siradig']
+        unique_together = [['tipo', 'codigo_siradig']]
         verbose_name_plural = 'Deducciones'
 
     def __str__(self) -> str:
         return self.name
+
+    @staticmethod
+    def get_tipo_code(name_tipo: str) -> str:
+        for tipo in DEDUCCION_TIPO:
+            if tipo[1] == name_tipo:
+                return tipo[0]
+        # DE as default
+        return "DE"
+
+
+class Aportes(models.Model):
+    name = models.CharField(max_length=120, verbose_name='Nombre')
+    descripcion = models.CharField(max_length=120, blank=True, null=True, verbose_name='Descripción')
+
+
+class AportesPorcentaje(models.Model):
+    aporte = models.ForeignKey(Aportes, on_delete=models.CASCADE)
+    valor = models.FloatField(default=0.0)
+    validity_from = models.DateField(blank=True, null=True, verbose_name='Vigencia desde')
+    validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
+
+    def __str__(self) -> str:
+        return f'{self.aporte.name} - {self.periodo.strftime("%Y/%m")} - $ {self.valor}'
