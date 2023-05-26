@@ -49,7 +49,7 @@ class Command(BaseCommand):
                 for j in range(len(TABLA_ART_94[tabla])):
                     from_value = round(TABLA_ART_94[tabla][j][0] / 12 * i, 2)
                     to_value = 9999999999
-                    if j+1 < len(TABLA_ART_94[tabla]):
+                    if j + 1 < len(TABLA_ART_94[tabla]):
                         to_value = round(TABLA_ART_94[tabla][j + 1][0] / 12 * i, 2) - 0.01
                     TablaArt94.objects.create(period=this_period,
                                               from_value=from_value,
