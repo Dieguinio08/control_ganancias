@@ -115,19 +115,45 @@ TABLA_ART_30 = {
 
 TOPES = {
     2022: {
-        'MNI': 451683.19,
-        'Gastos Sepelio': 996.23,
-        'Crédito Hipotecario': 20000,
-        'Seguros': 42921.24,
-        '40% MNI': 180673.28,
-        '4 MNI': 1806732.76,
+        'MNI': {
+            'importe': 451683.19,
+            'tipo': 'anual'
+        },
+        'MNI Mes': {
+            'importe': 451683.19,
+        },
+        'Gastos Sepelio': {
+            'importe': 996.23,
+            'tipo': 'anual'
+        },
+        'Crédito Hipotecario': {
+            'importe': 20000,
+            'tipo': 'anual'
+        },
+        'Seguros': {
+            'importe': 42921.24,
+            'tipo': 'anual'
+        }
     },
     2023: {
-        'MNI': 451683.19,
-        'Gastos Sepelio': 996.23,
-        'Crédito Hipotecario': 20000,
-        'Seguros': 42921.24,
-        '40% MNI': 180673.28,
-        '4 MNI': 1806732.76,
+        'MNI': {
+            'importe': 451683.19,
+            'tipo': 'anual'
+        },
+        'MNI Mes': {
+            'importe': 451683.19,
+        },
+        'Gastos Sepelio': {
+            'importe': 996.23,
+            'tipo': 'anual'
+        },
+        'Crédito Hipotecario': {
+            'importe': 20000,
+            'tipo': 'anual'
+        },
+        'Seguros': {
+            'importe': 42921.24,
+            'tipo': 'anual'
+        }
     },
 }

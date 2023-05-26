@@ -1,10 +1,11 @@
 from django.contrib import admin
 
 from ganancias.models import (Concepto, ConceptoLiquidado, Deduccion, Empleado,
-                              Empresa, TablaArt30, TablaArt94)
+                              Empresa, TablaArt30, TablaArt94, Tope, TopeValor)
 
 
 admin.site.register(ConceptoLiquidado)
+admin.site.register(Tope)
 
 
 @admin.register(Concepto)
@@ -79,3 +80,14 @@ class TablaArt30Admin(admin.ModelAdmin):
     @admin.display(empty_value='unknown')
     def importe(self, obj):
         return f'$ {"%.2f" % round(obj.value, 2)}'
+
+
+@admin.register(TopeValor)
+class TopeValorAdmin(admin.ModelAdmin):
+    list_display = ("tope", "periodo", "value")
+    list_filter = ("tope", 'period')
+    list_per_page = 30
+
+    @admin.display(empty_value='unknown')
+    def periodo(self, obj):
+        return obj.period.strftime('%Y/%m')

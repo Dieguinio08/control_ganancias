@@ -140,11 +140,15 @@ class Tope(models.Model):
 
 class TopeValor(models.Model):
     tope = models.ForeignKey(Tope, on_delete=models.CASCADE)
-    periodo = models.DateField()
-    valor = models.FloatField(default=0.0)
+    period = models.DateField()
+    value = models.FloatField(default=0.0)
 
     def __str__(self) -> str:
         return f'{self.tope.name} - {self.periodo.strftime("%Y/%m")} - $ {self.valor}'
+
+    class Meta:
+        ordering = ['-period', 'tope']
+        unique_together = [['tope', 'period']]
 
 
 class Deduccion(models.Model):
