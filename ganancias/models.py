@@ -104,6 +104,9 @@ class Concepto(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    class Meta:
+        ordering = ['others', 'exento', 'tipo_concepto', 'name']
+
 
 class Liquidacion(models.Model):
     periodo = models.DateField()
@@ -183,3 +186,31 @@ class AportesPorcentaje(models.Model):
 
     def __str__(self) -> str:
         return f'{self.aporte.name} - {self.periodo.strftime("%Y/%m")} - $ {self.valor}'
+
+
+class TablaArt94(models.Model):
+    period = models.DateField(verbose_name='Periodo')
+    from_value = models.FloatField(default=0.0, verbose_name='Desde')
+    to_value = models.FloatField(default=0.0, verbose_name='Hasta')
+    tax_percent = models.FloatField(default=0.0, verbose_name='Porcentaje')
+    tax_fixed = models.FloatField(default=0.0, verbose_name='Fijo')
+
+    def __str__(self) -> str:
+        return f'{self.period.strftime("%Y/%m")} - {self.from_value} - {self.to_value} - {self.tax_percent} - {self.tax_fixed}'
+
+    class Meta:
+        ordering = ['-period', 'from_value']
+        verbose_name_plural = 'Tabla Art. 94'
+
+
+class TablaArt30(models.Model):
+    deduccion = models.ForeignKey(Deduccion, on_delete=models.CASCADE)
+    period = models.DateField(verbose_name='Periodo')
+    value = models.FloatField(default=0.0, verbose_name='Importe')
+
+    def __str__(self) -> str:
+        return f'{self.deduccion} - {self.period.strftime("%Y/%m")} - $ {self.value}'
+
+    class Meta:
+        ordering = ['-period', 'deduccion']
+        verbose_name_plural = 'Tabla Art. 30'

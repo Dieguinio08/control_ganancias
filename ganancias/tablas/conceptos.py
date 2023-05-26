@@ -98,4 +98,114 @@ CONCEPTOS = {
         'tipo_concepto': 'NOREM',
         'habitualidad': 'NH',
     },
+    # Otros Empleos -----------------------------------------------------------
+    'OE Remuneración bruta gravada': {'others': True},
+    'OE No Remunerativo bruto gravada': {
+        'others': True,
+        'tipo_concepto': 'NOREM',
+    },
+    'OE Retribuciones no habituales gravada': {
+        'others': True,
+        'habitualidad': 'NH',
+    },
+    'OE Retribuciones no habituales NR bruto gravada': {
+        'others': True,
+        'tipo_concepto': 'NOREM',
+        'habitualidad': 'NH',
+    },
+    'OE Horas Extras Gravadas': {
+        'others': True,
+        'extras': {
+            'tipo': 'HE',
+            'dias': 'READY',
+        }
+    },
+    'OE Horas Extras Exentas': {
+        'exento': True,
+        'others': True,
+        'extras': {
+            'tipo': 'HE',
+            'dias': 'READY',
+        }
+    },
+    'OE Gastos Movilidad': {'others': True},
+    'OE Gastos Viaticos': {'others': True},
+    'OE Gastos otras compensaciones análogas': {'others': True},
+    'OE Gastos Movilidad Larga Distancia': {'others': True},
+    'OE Gastos Viaticos Larga Distancia': {'others': True},
+    'OE Gastos Movilidad Larga Distancia CCT 40/89': {'others': True},
+    'OE Gastos Viaticos Larga Distancia CCT 40/89': {'others': True},
+    'OE Gastos otras comp analogas Larga Distancia CCT 40/89': {'others': True},
+    'OE Material didáctico personal docente': {'others': True},
+    'OE Bonos de productividad gravados': {
+        'others': True,
+        'habitualidad': 'NH',
+    },
+    'OE Fallos de caja gravados': {'others': True},
+    'OE Conceptos de similar naturaleza gravados': {'others': True},
+    'OE Remuneración exenta o no alcanzada': {
+        'others': True,
+        'exento': True,
+    },
+    'OE No remunerativo exento o no alcanzado': {
+        'others': True,
+        'tipo_concepto': 'NOREM',
+        'exento': True,
+    },
+    'OE Remuneración No Habitual exenta o no alcanzada': {
+        'others': True,
+        'exento': True,
+    },
+    'OE No remunerativo No Habitual exento o no alcanzado': {
+        'others': True,
+        'tipo_concepto': 'NOREM',
+        'habitualidad': 'NH',
+        'exento': True,
+    },
+    'OE Remuneración exenta Ley N° 27.718': {
+        'others': True,
+        'exento': True,
+    },
+    'OE Bonos de productividad exentos': {
+        'others': True,
+        'habitualidad': 'NH',
+        'exento': True,
+    },
+    'OE Fallos de caja exentos': {
+        'others': True,
+        'exento': True,
+    },
+    'OE Conceptos de similar naturaleza exentos': {
+        'others': True,
+        'exento': True,
+    },
+    'OE Suplementos particulares artículo 57 de la Ley N° 19.101 exentos': {
+        'others': True,
+        'exento': True,
+    },
+    'OE Compensación gastos de teletrabajo exentos': {
+        'others': True,
+        'habitualidad': 'NH',
+        'exento': True,
+    },
+    'OE Ajustes períodos anteriores - Remuneración gravada': {
+        'others': True,
+        'habitualidad': 'NH',
+    },
+    'OE Ajustes NR períodos anteriores - No remunerativo gravado': {
+        'others': True,
+        'tipo_concepto': 'NOREM',
+        'habitualidad': 'NH',
+    },
+    'OE Ajustes períodos anteriores - Remuneración exenta': {
+        'others': True,
+        'exento': True,
+        'habitualidad': 'NH',
+    },
+    'OE Ajustes NR períodos anteriores - No remunerativo exento': {
+        'others': True,
+        'exento': True,
+        'tipo_concepto': 'NOREM',
+        'habitualidad': 'NH',
+    },
 }
