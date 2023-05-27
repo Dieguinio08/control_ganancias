@@ -1,9 +1,10 @@
-from datetime import date
+from datetime import date, datetime
 
 from django.core.management.base import BaseCommand
 
-from ganancias.models import Deduccion, TablaArt30, TablaArt94, Tope, TopeValor
-from ganancias.tablas.tablas import TABLA_ART_30, TABLA_ART_94, TOPES
+from ganancias.models import (Deduccion, DeduccionIncrementadaDetail, PeriodoDeduccionIncrementada,
+                              TablaArt30, TablaArt94, Tope, TopeValor)
+from ganancias.tablas.tablas import DEDUCCION_INCREMENTADA, TABLA_ART_30, TABLA_ART_94, TOPES
 
 
 class Command(BaseCommand):
@@ -12,7 +13,37 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # self.tabla_art_30()
         # self.tabla_art_94()
-        self.topes()
+        # self.topes()
+        self.deduccion_incrementada()
+
+    def deduccion_incrementada(self):
+        PeriodoDeduccionIncrementada.objects.all().delete()
+
+        for period in DEDUCCION_INCREMENTADA:
+            v_from = datetime.strptime(period['vigencia_desde'], '%Y-%m-%d')
+            v_to = datetime.strptime(period['vigencia_hasta'], '%Y-%m-%d')
+            sac_exento_limit = period['sac_exento']
+
+            period_obj = PeriodoDeduccionIncrementada.objects.get_or_create(validity_from=v_from,
+                                                                            validity_to=v_to,
+                                                                            sac_exento_limit=sac_exento_limit)[0]
+            for i in range(len(period['deducciones']) - 1):
+                # En la última linea la deduccion es $0, no la incluyo
+                from_value = period['deducciones'][i][0] + 0.01
+                to_value = period['deducciones'][i + 1][0]
+                value = period['deducciones'][i][1]
+
+                if DeduccionIncrementadaDetail.objects.filter(period=period_obj,
+                                                              from_value=from_value).count() == 0:
+                    DeduccionIncrementadaDetail.objects.create(period=period_obj,
+                                                               from_value=from_value,
+                                                               to_value=to_value,
+                                                               value=value)
+                    msg = f'Dedu {period_obj} - $ {"%.2f" % round(from_value, 2)} a $ {"%.2f" % round(to_value, 2)} agregada'
+                    self.stdout.write(self.style.SUCCESS(msg))
+                else:
+                    msg = f'Dedu {period_obj} - $ {"%.2f" % round(from_value, 2)} a $ {"%.2f" % round(to_value, 2)} ya existe'
+                    self.stdout.write(msg)
 
     def topes(self):
         # TopeValor.objects.all().delete()

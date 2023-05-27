@@ -109,16 +109,16 @@ class Concepto(models.Model):
 
 
 class Liquidacion(models.Model):
-    periodo = models.DateField()
+    period = models.DateField()
     payday = models.DateField()
 
     def __str__(self) -> str:
-        return f'{self.periodo.strftime("%Y/%m")} - {self.payday.strftime("%Y/%m/%d")}'
+        return f'{self.period.strftime("%Y/%m")} - {self.payday.strftime("%Y/%m/%d")}'
 
     class Meta:
         ordering = ['payday']
         verbose_name_plural = 'Liquidaciones'
-        unique_together = [['periodo', 'payday']]
+        unique_together = [['period', 'payday']]
 
 
 class ConceptoLiquidado(models.Model):
@@ -144,11 +144,12 @@ class TopeValor(models.Model):
     value = models.FloatField(default=0.0)
 
     def __str__(self) -> str:
-        return f'{self.tope.name} - {self.periodo.strftime("%Y/%m")} - $ {self.valor}'
+        return f'{self.tope.name} - {self.period.strftime("%Y/%m")} - $ {self.valor}'
 
     class Meta:
         ordering = ['-period', 'tope']
         unique_together = [['tope', 'period']]
+        verbose_name_plural = 'Topes - Valores'
 
 
 class Deduccion(models.Model):
@@ -189,7 +190,7 @@ class AportesPorcentaje(models.Model):
     validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
 
     def __str__(self) -> str:
-        return f'{self.aporte.name} - {self.periodo.strftime("%Y/%m")} - $ {self.valor}'
+        return f'{self.aporte.name} - {self.validity_from.strftime("%Y/%m")} - $ {self.valor}'
 
 
 class TablaArt94(models.Model):
@@ -218,3 +219,31 @@ class TablaArt30(models.Model):
     class Meta:
         ordering = ['-period', 'deduccion']
         verbose_name_plural = 'Tabla Art. 30'
+
+
+class PeriodoDeduccionIncrementada(models.Model):
+    validity_from = models.DateField(blank=True, null=True, verbose_name='Vigencia desde')
+    validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
+    sac_exento_limit = models.FloatField(default=0.0, verbose_name='Importe')
+
+    def __str__(self) -> str:
+        return f'{self.validity_from.strftime("%Y/%m")} - {self.validity_to.strftime("%Y/%m")}'
+
+    class Meta:
+        ordering = ['-validity_from']
+        unique_together = [['validity_from', 'validity_to']]
+        verbose_name_plural = 'Periodo Deducción Incrementada'
+
+
+class DeduccionIncrementadaDetail(models.Model):
+    period = models.ForeignKey(PeriodoDeduccionIncrementada, on_delete=models.CASCADE, verbose_name='Periodo')
+    from_value = models.FloatField(default=0.0, verbose_name='Desde')
+    to_value = models.FloatField(default=0.0, verbose_name='Hasta')
+    value = models.FloatField(default=0.0, verbose_name='Importe')
+
+    def __str__(self) -> str:
+        return f'{self.period} - $ {self.from_value} - $ {self.value}'
+
+    class Meta:
+        ordering = ['period', 'value']
+        verbose_name_plural = 'Detalle Deducción Incrementada'

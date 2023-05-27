@@ -1,10 +1,12 @@
 from django.contrib import admin
 
-from ganancias.models import (Concepto, ConceptoLiquidado, Deduccion, Empleado,
-                              Empresa, TablaArt30, TablaArt94, Tope, TopeValor)
+from ganancias.models import (Concepto, ConceptoLiquidado, Deduccion, DeduccionIncrementadaDetail,
+                              Empleado, Empresa, PeriodoDeduccionIncrementada,
+                              TablaArt30, TablaArt94, Tope, TopeValor)
 
 
 admin.site.register(ConceptoLiquidado)
+admin.site.register(PeriodoDeduccionIncrementada)
 admin.site.register(Tope)
 
 
@@ -91,3 +93,18 @@ class TopeValorAdmin(admin.ModelAdmin):
     @admin.display(empty_value='unknown')
     def periodo(self, obj):
         return obj.period.strftime('%Y/%m')
+
+
+@admin.register(DeduccionIncrementadaDetail)
+class DeduccionIncrementadaDetailAdmin(admin.ModelAdmin):
+    list_display = ("period", "desde", "hasta", "value")
+    list_filter = ("period", )
+    list_per_page = 30
+
+    @admin.display(empty_value='unknown')
+    def desde(self, obj):
+        return f'$ {"%.2f" % round(obj.from_value, 2)}'
+
+    @admin.display(empty_value='unknown')
+    def hasta(self, obj):
+        return f'$ {"%.2f" % round(obj.to_value, 2)}'
