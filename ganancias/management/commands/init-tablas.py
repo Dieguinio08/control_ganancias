@@ -17,7 +17,7 @@ class Command(BaseCommand):
         self.deduccion_incrementada()
 
     def deduccion_incrementada(self):
-        PeriodoDeduccionIncrementada.objects.all().delete()
+        # PeriodoDeduccionIncrementada.objects.all().delete()
 
         for period in DEDUCCION_INCREMENTADA:
             v_from = datetime.strptime(period['vigencia_desde'], '%Y-%m-%d')
