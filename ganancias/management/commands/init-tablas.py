@@ -2,9 +2,11 @@ from datetime import date, datetime
 
 from django.core.management.base import BaseCommand
 
-from ganancias.models import (Deduccion, DeduccionIncrementadaDetail, PeriodoDeduccionIncrementada,
+from ganancias.models import (Deduccion, DeduccionIncrementadaDetail, OtrosConceptos,
+                              PeriodoDeduccionIncrementada,
                               TablaArt30, TablaArt94, Tope, TopeValor)
-from ganancias.tablas.tablas import DEDUCCION_INCREMENTADA, TABLA_ART_30, TABLA_ART_94, TOPES
+from ganancias.tablas.tablas import (DEDUCCION_INCREMENTADA, TABLA_ART_30, TABLA_ART_94,
+                                     TABLAS_OTROS_CONCEPTOS, TOPES)
 
 
 class Command(BaseCommand):
@@ -14,7 +16,39 @@ class Command(BaseCommand):
         # self.tabla_art_30()
         # self.tabla_art_94()
         # self.topes()
-        self.deduccion_incrementada()
+        # self.deduccion_incrementada()
+        self.otros_conceptos()
+
+    def otros_conceptos(self):
+        # OtrosConceptos.objects.all().delete()
+
+        for concepto in TABLAS_OTROS_CONCEPTOS:
+            for period in TABLAS_OTROS_CONCEPTOS[concepto]:
+                v_from = datetime.strptime(period[0], '%Y-%m-%d').date()
+                v_to = datetime.strptime(period[1], '%Y-%m-%d').date()
+                value = period[2]
+
+                if OtrosConceptos.objects.filter(concepto=concepto,
+                                                 validity_from=v_from).count() == 0:
+                    OtrosConceptos.objects.create(concepto=concepto,
+                                                  validity_from=v_from,
+                                                  validity_to=v_to,
+                                                  value=value)
+                    msg = f'Tabla {concepto} - {period[0]} a {period[1]} agregada'
+                    self.stdout.write(self.style.SUCCESS(msg))
+                else:
+                    this_concepto = OtrosConceptos.objects.get(concepto=concepto,
+                                                               validity_from=v_from)
+
+                    if this_concepto.value == float(value) and this_concepto.validity_to == v_to:
+                        msg = f'Tabla {concepto} - {period[0]} a {period[1]} ya existe'
+                        self.stdout.write(self.style.NOTICE(msg))
+                    else:
+                        this_concepto.value = value
+                        this_concepto.validity_to = v_to
+                        this_concepto.save()
+                        msg = f'Tabla {concepto} - {period[0]} a {period[1]} actualizada'
+                        self.stdout.write(self.style.WARNING(msg))
 
     def deduccion_incrementada(self):
         # PeriodoDeduccionIncrementada.objects.all().delete()

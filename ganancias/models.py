@@ -33,6 +33,11 @@ TIPO_CONCEPTO = [
     ('APOR', 'Aporte'),
 ]
 
+OTROS_CONCEPTOS = [
+    ('SICOSS', 'Tope SICOSS'),
+    ('EXBO', 'Exención Bono'),
+]
+
 
 class Empresa(models.Model):
     name = models.CharField(max_length=120, verbose_name='Razon Social', validators=[validate_name])
@@ -247,3 +252,17 @@ class DeduccionIncrementadaDetail(models.Model):
     class Meta:
         ordering = ['period', 'value']
         verbose_name_plural = 'Detalle Deducción Incrementada'
+
+
+class OtrosConceptos(models.Model):
+    concepto = models.CharField(max_length=10, choices=OTROS_CONCEPTOS)
+    validity_from = models.DateField(blank=True, null=True, verbose_name='Vigencia desde')
+    validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
+    value = models.FloatField(default=0.0, verbose_name='Importe')
+
+    def __str__(self) -> str:
+        return f'{self.concepto} - {self.validity_from.strftime("%Y/%m")} - {self.validity_to.strftime("%Y/%m")}'
+
+    class Meta:
+        ordering = ['concepto']
+        verbose_name_plural = 'Otros Conceptos'
