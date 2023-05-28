@@ -50,6 +50,6 @@ jobs:
 
     - name: Test commands to init DB 
       run: |
-        python manage.py init-deducciones
-        python manage.py init-conceptos
-        python manage.py init-tablas
+        python manage.py init_deducciones
+        python manage.py init_conceptos
+        python manage.py init_tablas

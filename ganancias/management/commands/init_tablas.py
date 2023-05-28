@@ -13,10 +13,10 @@ class Command(BaseCommand):
     help = 'Completar todas las tablas del Impuesto a las Ganancias en la base de datos'
 
     def handle(self, *args, **options):
-        # self.tabla_art_30()
-        # self.tabla_art_94()
-        # self.topes()
-        # self.deduccion_incrementada()
+        self.tabla_art_30()
+        self.tabla_art_94()
+        self.topes()
+        self.deduccion_incrementada()
         self.otros_conceptos()
 
     def otros_conceptos(self):
