@@ -43,7 +43,7 @@ class Empresa(models.Model):
     name = models.CharField(max_length=120, verbose_name='Razon Social', validators=[validate_name])
     cuit = models.CharField(max_length=11, validators=[validate_cuit])
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    take_sac = models.CharField(max_length=2, default='AN', verbose_name="Consideración SAC")
+    take_sac = models.CharField(max_length=2, choices=DEDUCCION_PERIODO, default='AN', verbose_name="Consideración SAC")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -255,6 +255,8 @@ class DeduccionIncrementadaDetail(models.Model):
 
 
 class OtrosConceptos(models.Model):
+    """ Otros Conceptos - Tope SICOSS, Exención Bono
+    """
     concepto = models.CharField(max_length=10, choices=OTROS_CONCEPTOS)
     validity_from = models.DateField(blank=True, null=True, verbose_name='Vigencia desde')
     validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
@@ -266,3 +268,21 @@ class OtrosConceptos(models.Model):
     class Meta:
         ordering = ['concepto']
         verbose_name_plural = 'Otros Conceptos'
+
+
+class DeduccionEmpleado(models.Model):
+    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
+    deduccion = models.ForeignKey(Deduccion, on_delete=models.CASCADE)
+    validity_from = models.DateField(blank=True, verbose_name='Vigencia desde')
+    validity_to = models.DateField(blank=True, verbose_name='Vigencia hasta')
+    nombre = models.CharField(max_length=120, verbose_name='Nombre - Razón Social', null=True, blank=True)
+    value = models.FloatField(default=0.0, verbose_name='Importe')
+
+    def __str__(self) -> str:
+        resp = f'{self.empleado.name} - {self.deduccion.name} - {self.validity_from.strftime("%Y/%m")}'
+        resp += f' - {self.validity_to.strftime("%Y/%m")} - $ {self.value}'
+        return resp
+
+    class Meta:
+        ordering = ['empleado', 'deduccion']
+        verbose_name_plural = 'Deducciones Empleado'

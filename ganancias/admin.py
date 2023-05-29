@@ -1,11 +1,13 @@
 from django.contrib import admin
 
-from ganancias.models import (Concepto, ConceptoLiquidado, Deduccion, DeduccionIncrementadaDetail,
+from ganancias.models import (Concepto, ConceptoLiquidado, Deduccion,
+                              DeduccionEmpleado, DeduccionIncrementadaDetail,
                               Empleado, Empresa, OtrosConceptos, PeriodoDeduccionIncrementada,
                               TablaArt30, TablaArt94, Tope, TopeValor)
 
 
 admin.site.register(ConceptoLiquidado)
+admin.site.register(DeduccionEmpleado)
 admin.site.register(OtrosConceptos)
 admin.site.register(PeriodoDeduccionIncrementada)
 admin.site.register(Tope)
