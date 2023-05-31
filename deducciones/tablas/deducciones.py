@@ -1,34 +1,108 @@
 
+TOPES = {
+    2022: {
+        'MNI': {
+            'importe': 252564.84,
+            'tipo': 'anual'
+        },
+        'MNI Mes': {
+            'importe': 252564.84,
+        },
+        '40pMNI': {
+            'importe': 101025.94,
+        },
+        'Gastos Sepelio': {
+            'importe': 996.23,
+            'tipo': 'anual'
+        },
+        'Crédito Hipotecario': {
+            'importe': 20000,
+            'tipo': 'anual'
+        },
+        'Seguros': {
+            'importe': 42921.24,
+            'tipo': 'anual'
+        },
+        'GN5': {
+            'importe': 9999999999.99,
+        }
+    },
+    2023: {
+        'MNI': {
+            'importe': 451683.19,
+            'tipo': 'anual'
+        },
+        'MNI Mes': {
+            'importe': 451683.19,
+        },
+        '40pMNI': {
+            'importe': 180673.28,
+        },
+        'Gastos Sepelio': {
+            'importe': 996.23,
+            'tipo': 'anual'
+        },
+        'Crédito Hipotecario': {
+            'importe': 20000,
+            'tipo': 'anual'
+        },
+        'Seguros': {
+            'importe': 42921.24,
+            'tipo': 'anual'
+        },
+        'GN5': {
+            'importe': 9999999999.99,
+        }
+    },
+}
+
 
 DEDUCCIONES = {
     'deduccion': {
-        '1': 'Cuotas Médico-Asistenciales',
-        '2': 'Primas de Seguro para el caso de muerte',
-        '3': 'Donaciones',
-        '4': 'Intereses Préstamo Hipotecario',
-        '5': 'Gastos de Sepelio',
-        '7': 'Gastos Médicos y Paramédicos',
-        '8': 'Deducción del Personal Doméstico',
-        '9': 'Aporte a Sociedades de Garantía Recíproca',
-        '10': 'Vehiculos de Corredores y Viajantes de Comercio',
-        '11': 'Gastos de Representación e Intereses de Corredores y Viajantes de Comercio',
-        '21': 'Gastos de Adquisición de Indumentaria y Equipamiento uso Lugar de Trabajo',
-        '22': 'Alquiler de Inmuebles destinados a casa habitación',
-        '23': 'Primas de Ahorro correspondientes a Seguros Mixtos',
-        '24': 'Aportes correspondientes a Planes de Seguro de Retiro Privados',
-        '25': 'Adquisición de Cuotapartes de Fondos Comunes de Inversión con fines de retiro',
-        '32': 'Herramientas educativas - Servicios con fines educativos',
-        '32-1': 'Servicios con fines educativos',
-        '32-2': 'Herramientas educativas',
-        '99-1': 'Aportes para fondos de Jubilación, Retiros, Pensiones o Subsidios destinados al ANSES',
-        '99-2': 'Cajas Provinciales o Municipales',
-        '99-3': 'Impuesto sobre los Créditos y Débitos en Cuenta Bancaria sin CBU',
-        '99-4': 'Beneficios Derivados de Regímenes tratamientos Preferenciales Mediante Deducciones',
-        '99-5': 'Beneficios Derivados de Regímenes tratamientos Preferenciales No Mediante Deducciones',
-        '99-6': 'Actores - Retribuciones Abonadas a Representantes - R.G.N° 2442/08',
-        '99-7': 'Cajas Complementarias de Previsión',
-        '99-8': 'Fondos Compensadores de Previsión',
-        '99-9': 'Otros',
+        '1': {'name': 'Cuotas Médico-Asistenciales',
+              'tope': 'GN5'},
+        '2': {'name': 'Primas de Seguro para el caso de muerte',
+              'tope': 'Seguros',
+              'periodicidad': 'AN'},
+        '3': {'name': 'Donaciones',
+              'tope': 'GN5'},
+        '4': {'name': 'Intereses Préstamo Hipotecario',
+              'tope': 'Crédito Hipotecario'},
+        '5': {'name': 'Gastos de Sepelio',
+              'tope': 'Gastos Sepelio'},
+        '7': {'name': 'Gastos Médicos y Paramédicos',
+              'tope': 'GN5',
+              'periodicidad': 'AN'},
+        '8': {'name': 'Deducción del Personal Doméstico',
+              'tope': 'MNI'},
+        '9': {'name': 'Aporte a Sociedades de Garantía Recíproca'},
+        '10': {'name': 'Vehiculos de Corredores y Viajantes de Comercio'},
+        '11': {'name': 'Gastos de Representación e Intereses de Corredores y Viajantes de Comercio'},
+        '21': {'name': 'Gastos de Adquisición de Indumentaria y Equipamiento uso Lugar de Trabajo'},
+        '22': {'name': 'Alquiler de Inmuebles destinados a casa habitación',
+               'tope': 'MNI'},
+        '23': {'name': 'Primas de Ahorro correspondientes a Seguros Mixtos',
+               'tope': 'Seguros',
+               'periodicidad': 'AN'},
+        '24': {'name': 'Aportes correspondientes a Planes de Seguro de Retiro Privados',
+               'tope': 'Seguros',
+               'periodicidad': 'AN'},
+        '25': {'name': 'Adquisición de Cuotapartes de Fondos Comunes de Inversión con fines de retiro',
+               'tope': 'Seguros',
+               'periodicidad': 'AN'},
+        # Combina ambos tipos de deducciones (32-1 y 32-2) por motivos de tope
+        '32': {'name': 'Herramientas educativas - Servicios con fines educativos',
+               'tope': '40pMNI',
+               },
+        '99-1': {'name': 'Aportes para fondos de Jubilación, Retiros, Pensiones o Subsidios destinados al ANSES'},
+        '99-2': {'name': 'Cajas Provinciales o Municipales'},
+        '99-3': {'name': 'Impuesto sobre los Créditos y Débitos en Cuenta Bancaria sin CBU'},
+        '99-4': {'name': 'Beneficios Derivados de Regímenes tratamientos Preferenciales Mediante Deducciones'},
+        '99-5': {'name': 'Beneficios Derivados de Regímenes tratamientos Preferenciales No Mediante Deducciones'},
+        '99-6': {'name': 'Actores - Retribuciones Abonadas a Representantes - R.G.N° 2442/08'},
+        '99-7': {'name': 'Cajas Complementarias de Previsión'},
+        '99-8': {'name': 'Fondos Compensadores de Previsión'},
+        '99-9': {'name': 'Otros'},
     },
     'cargaFamilia': {
         '1': 'Cónyuge',

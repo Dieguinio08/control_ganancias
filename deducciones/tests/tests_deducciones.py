@@ -14,8 +14,7 @@ class CalculosTesting(TestCase):
         my_command_deducciones = CommandDeducciones()
         my_command_deducciones.handle()
         my_command = CommandTablasD()
-        my_command.tabla_art_30()
-        my_command.topes()
+        my_command.handle()
         super().setUpClass()
 
     def test_deduccion_hijo_ok_1(self):
@@ -26,12 +25,12 @@ class CalculosTesting(TestCase):
     def test_deduccion_hijo_ok_2(self):
         periodo = date(2023, 7, 1)
         deduccion_resultante = get_deduccion_periodo('CF', '3', periodo)
-        self.assertEqual(deduccion_resultante, 106178.19)
+        self.assertEqual(deduccion_resultante, 123874.55)
 
     def test_deduccion_hijo_ok_3(self):
         periodo = date(2023, 7, 1)
         deduccion_resultante = get_deduccion_periodo('CF', '30', periodo)
-        self.assertEqual(deduccion_resultante, 106178.19)
+        self.assertEqual(deduccion_resultante, 123874.55)
 
     def test_deduccion_conyuge(self):
         periodo = date(2023, 6, 1)
@@ -47,6 +46,16 @@ class CalculosTesting(TestCase):
         periodo = date(2023, 6, 1)
         deduccion_resultante = get_deduccion_periodo('DE', '2', periodo, 99999.99)
         self.assertEqual(deduccion_resultante, 42921.24)
+
+    def test_credito_hipotecario(self):
+        periodo = date(2023, 6, 1)
+        deduccion_resultante = get_deduccion_periodo('DE', '4', periodo, 99999.99)
+        self.assertEqual(deduccion_resultante, 20000)
+
+    def test_serv_educativos(self):
+        periodo = date(2023, 6, 1)
+        deduccion_resultante = get_deduccion_periodo('DE', '32', periodo, 99999.99)
+        self.assertEqual(deduccion_resultante, 90336.64)
 
     def test_deduccion_no_configurada_1(self):
         periodo = date(2023, 6, 1)

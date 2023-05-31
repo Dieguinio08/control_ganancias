@@ -4,6 +4,7 @@ from django.db import models
 
 from ganancias.models import Empleado
 
+# Deducción 'AN' para deduccions a tomar en la anual o final
 DEDUCCION_PERIODO = [
     ('AN', 'Anual'),
     ('ME', 'Mensual'),
