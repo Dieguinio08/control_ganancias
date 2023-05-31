@@ -52,4 +52,5 @@ jobs:
       run: |
         python manage.py init_deducciones
         python manage.py init_conceptos
+        python manage.py init_tablas_d
         python manage.py init_tablas

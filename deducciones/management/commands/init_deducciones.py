@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
-from ganancias.models import Deduccion
-from ganancias.tablas.deducciones import DEDUCCIONES, DEDUCCIONES_ANUALES
+from deducciones.models import Deduccion
+from deducciones.tablas.deducciones import DEDUCCIONES, DEDUCCIONES_ANUALES
 
 
 class Command(BaseCommand):

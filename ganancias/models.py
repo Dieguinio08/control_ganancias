@@ -5,17 +5,6 @@ from django.forms.models import model_to_dict
 
 from ganancias.validators import validate_cuil, validate_cuit, validate_name
 
-DEDUCCION_PERIODO = [
-    ('AN', 'Anual'),
-    ('ME', 'Mensual'),
-]
-
-DEDUCCION_TIPO = [
-    ('DE', 'deduccion'),
-    ('CF', 'cargaFamilia'),
-    ('PC', 'retPerPago'),
-    ('MA', 'manual'),
-]
 
 CONSIDERACION_SAC = [
     ('AN', 'Anual'),
@@ -25,6 +14,11 @@ CONSIDERACION_SAC = [
 HABITUALIDAD = [
     ('HA', 'Habitual'),
     ('NH', 'No Habitual'),
+]
+
+PERIODICIDAD = [
+    ('AN', 'Anual'),
+    ('ME', 'Mensual'),
 ]
 
 TIPO_CONCEPTO = [
@@ -43,7 +37,7 @@ class Empresa(models.Model):
     name = models.CharField(max_length=120, verbose_name='Razon Social', validators=[validate_name])
     cuit = models.CharField(max_length=11, validators=[validate_cuit])
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    take_sac = models.CharField(max_length=2, choices=DEDUCCION_PERIODO, default='AN', verbose_name="Consideración SAC")
+    take_sac = models.CharField(max_length=2, choices=CONSIDERACION_SAC, default='AN', verbose_name="Consideración SAC")
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -99,7 +93,7 @@ class Empleado(models.Model):
 
 class Concepto(models.Model):
     tipo_concepto = models.CharField(max_length=5, choices=TIPO_CONCEPTO, default='REM')
-    periodicidad = models.CharField(max_length=2, choices=DEDUCCION_PERIODO, default='ME')
+    periodicidad = models.CharField(max_length=2, choices=PERIODICIDAD, default='ME')
     name = models.CharField(max_length=100, verbose_name='Nombre', null=True, blank=True)
     habitualidad = models.CharField(max_length=2, default='HA')
     exento = models.BooleanField(default=False)
@@ -135,54 +129,6 @@ class ConceptoLiquidado(models.Model):
         return f'{self.empleado.name} - {self.concepto.name} - $ {self.importe}'
 
 
-class Tope(models.Model):
-    name = models.CharField(max_length=120, verbose_name='Nombre')
-    descripcion = models.CharField(max_length=120, blank=True, null=True, verbose_name='Descripción')
-
-    def __str__(self) -> str:
-        return self.name
-
-
-class TopeValor(models.Model):
-    tope = models.ForeignKey(Tope, on_delete=models.CASCADE)
-    period = models.DateField()
-    value = models.FloatField(default=0.0)
-
-    def __str__(self) -> str:
-        return f'{self.tope.name} - {self.period.strftime("%Y/%m")} - $ {self.valor}'
-
-    class Meta:
-        ordering = ['-period', 'tope']
-        unique_together = [['tope', 'period']]
-        verbose_name_plural = 'Topes - Valores'
-
-
-class Deduccion(models.Model):
-    tipo = models.CharField(max_length=2, choices=DEDUCCION_TIPO, default='DE')
-    codigo_siradig = models.CharField(max_length=20, verbose_name='Código Siradig')
-    name = models.CharField(max_length=120, verbose_name='Nombre')
-    periodicidad = models.CharField(max_length=2, choices=DEDUCCION_PERIODO, default='ME')
-    tope = models.ForeignKey(Tope, on_delete=models.SET_NULL, blank=True, null=True)
-    validity_from = models.DateField(blank=True, null=True, verbose_name='Vigencia desde')
-    validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
-
-    class Meta:
-        ordering = ['tipo', 'codigo_siradig']
-        unique_together = [['tipo', 'codigo_siradig']]
-        verbose_name_plural = 'Deducciones'
-
-    def __str__(self) -> str:
-        return self.name
-
-    @staticmethod
-    def get_tipo_code(name_tipo: str) -> str:
-        for tipo in DEDUCCION_TIPO:
-            if tipo[1] == name_tipo:
-                return tipo[0]
-        # DE as default
-        return "DE"
-
-
 class Aportes(models.Model):
     name = models.CharField(max_length=120, verbose_name='Nombre')
     descripcion = models.CharField(max_length=120, blank=True, null=True, verbose_name='Descripción')
@@ -211,19 +157,6 @@ class TablaArt94(models.Model):
     class Meta:
         ordering = ['-period', 'from_value']
         verbose_name_plural = 'Tabla Art. 94'
-
-
-class TablaArt30(models.Model):
-    deduccion = models.ForeignKey(Deduccion, on_delete=models.CASCADE)
-    period = models.DateField(verbose_name='Periodo')
-    value = models.FloatField(default=0.0, verbose_name='Importe')
-
-    def __str__(self) -> str:
-        return f'{self.deduccion} - {self.period.strftime("%Y/%m")} - $ {self.value}'
-
-    class Meta:
-        ordering = ['-period', 'deduccion']
-        verbose_name_plural = 'Tabla Art. 30'
 
 
 class PeriodoDeduccionIncrementada(models.Model):
@@ -268,21 +201,3 @@ class OtrosConceptos(models.Model):
     class Meta:
         ordering = ['concepto']
         verbose_name_plural = 'Otros Conceptos'
-
-
-class DeduccionEmpleado(models.Model):
-    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
-    deduccion = models.ForeignKey(Deduccion, on_delete=models.CASCADE)
-    validity_from = models.DateField(blank=True, verbose_name='Vigencia desde')
-    validity_to = models.DateField(blank=True, verbose_name='Vigencia hasta')
-    nombre = models.CharField(max_length=120, verbose_name='Nombre - Razón Social', null=True, blank=True)
-    value = models.FloatField(default=0.0, verbose_name='Importe')
-
-    def __str__(self) -> str:
-        resp = f'{self.empleado.name} - {self.deduccion.name} - {self.validity_from.strftime("%Y/%m")}'
-        resp += f' - {self.validity_to.strftime("%Y/%m")} - $ {self.value}'
-        return resp
-
-    class Meta:
-        ordering = ['empleado', 'deduccion']
-        verbose_name_plural = 'Deducciones Empleado'
