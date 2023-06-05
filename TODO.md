@@ -12,3 +12,4 @@ Funcion get toped value agregar ese vinculo
 - Lector de Siradig, para este caso pisa todo lo anterior.
 - Excluir MNI y Deducción Especial para el formulario de carga de deducciones.
 - Antes del cálculo del impuesto debe agregarse el tope del 5% en la BD
+- En las liquidaciones de cada empleado dejar registrado ese 5% de tope
