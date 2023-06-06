@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 
-from ganancias.exceptions import CuitValidationException, NameValidationException
-from ganancias.models import Empleado, Empresa
+from empresa.exceptions import CuitValidationException, NameValidationException
+from empresa.models import Empleado, Empresa
 
 
 class EmpleadoTesting(TestCase):

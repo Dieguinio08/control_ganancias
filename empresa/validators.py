@@ -1,4 +1,4 @@
-from ganancias.exceptions import CuitValidationException, NameValidationException
+from empresa.exceptions import CuitValidationException, NameValidationException
 
 
 def validate_cuil(value):
