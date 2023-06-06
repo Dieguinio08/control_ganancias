@@ -70,9 +70,9 @@ F1357_SCHEMA = {
                 ('cuota_sindical', 'Cuota sindical'),
             ],
             'aportes_agentes_otros_empleos': [
-                ('jubilacion', 'Aportes a fondos de  jubilaciones, retiros, pensiones otros empleos'),
-                ('obra_social', 'Aportes a obra sociales por otros empleos'),
-                ('cuota_sindical', 'Cuota sindical por otros empleos'),
+                ('oe_jubilacion', 'Aportes a fondos de  jubilaciones, retiros, pensiones otros empleos'),
+                ('oe_obra_social', 'Aportes a obra sociales por otros empleos'),
+                ('oe_cuota_sindical', 'Cuota sindical por otros empleos'),
             ],
             'deducciones': [
                 ('cuota_medica_asistencial', 'Cuotas médico asistenciales'),
@@ -104,7 +104,7 @@ F1357_SCHEMA = {
                 ('ded_incrementada_rango1',
                     'Deducción especial incrementada, primera parte, del penúltimo párrafo del inc. c) del art. 30 \
                     de la ley del gravamen'),
-                ('ded_incrementada_rango1',
+                ('ded_incrementada_rango2',
                     'Deducción especial incrementada, segunda parte, del penúltimo párrafo del inc. c) del art. 30 \
                     de la ley del gravamen'),
             ],
