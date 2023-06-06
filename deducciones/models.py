@@ -100,3 +100,31 @@ class TablaArt30(models.Model):
     class Meta:
         ordering = ['-period', 'deduccion']
         verbose_name_plural = 'Tabla Art. 30'
+
+
+class PeriodoDeduccionIncrementada(models.Model):
+    validity_from = models.DateField(blank=True, null=True, verbose_name='Vigencia desde')
+    validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
+    sac_exento_limit = models.FloatField(default=0.0, verbose_name='Importe')
+
+    def __str__(self) -> str:
+        return f'{self.validity_from.strftime("%Y/%m")} - {self.validity_to.strftime("%Y/%m")}'
+
+    class Meta:
+        ordering = ['-validity_from']
+        unique_together = [['validity_from', 'validity_to']]
+        verbose_name_plural = 'Periodo Deducción Incrementada'
+
+
+class DeduccionIncrementadaDetail(models.Model):
+    period = models.ForeignKey(PeriodoDeduccionIncrementada, on_delete=models.CASCADE, verbose_name='Periodo')
+    from_value = models.FloatField(default=0.0, verbose_name='Desde')
+    to_value = models.FloatField(default=0.0, verbose_name='Hasta')
+    value = models.FloatField(default=0.0, verbose_name='Importe')
+
+    def __str__(self) -> str:
+        return f'{self.period} - $ {self.from_value} - $ {self.value}'
+
+    class Meta:
+        ordering = ['period', 'value']
+        verbose_name_plural = 'Detalle Deducción Incrementada'

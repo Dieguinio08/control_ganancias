@@ -1,8 +1,10 @@
 from django.contrib import admin
 
-from deducciones.models import Deduccion, TablaArt30, Tope, TopeValor
+from deducciones.models import (Deduccion, DeduccionIncrementadaDetail, TablaArt30,
+                                PeriodoDeduccionIncrementada, Tope, TopeValor)
 
 
+admin.site.register(PeriodoDeduccionIncrementada)
 admin.site.register(Tope)
 
 
@@ -37,3 +39,18 @@ class TopeValorAdmin(admin.ModelAdmin):
     @admin.display(empty_value='unknown')
     def periodo(self, obj):
         return obj.period.strftime('%Y/%m')
+
+
+@admin.register(DeduccionIncrementadaDetail)
+class DeduccionIncrementadaDetailAdmin(admin.ModelAdmin):
+    list_display = ("period", "desde", "hasta", "value")
+    list_filter = ("period", )
+    list_per_page = 30
+
+    @admin.display(empty_value='unknown')
+    def desde(self, obj):
+        return f'$ {"%.2f" % round(obj.from_value, 2)}'
+
+    @admin.display(empty_value='unknown')
+    def hasta(self, obj):
+        return f'$ {"%.2f" % round(obj.to_value, 2)}'
