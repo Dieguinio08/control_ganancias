@@ -1,9 +1,8 @@
 from django.contrib import admin
 
-from deducciones.models import Deduccion, DeduccionEmpleado, TablaArt30, Tope, TopeValor
+from deducciones.models import Deduccion, TablaArt30, Tope, TopeValor
 
 
-admin.site.register(DeduccionEmpleado)
 admin.site.register(Tope)
 
 

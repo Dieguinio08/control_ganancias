@@ -3,7 +3,7 @@ from datetime import date
 from django.core.management.base import BaseCommand
 
 from deducciones.models import Deduccion, Tope, TopeValor
-from deducciones.tablas.deducciones import DEDUCCIONES, TOPES
+from deducciones.tables.deducciones import DEDUCCIONES, TOPES
 
 
 class Command(BaseCommand):

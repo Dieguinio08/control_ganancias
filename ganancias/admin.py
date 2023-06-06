@@ -1,11 +1,11 @@
 from django.contrib import admin
 
-from ganancias.models import (Concepto, ConceptoLiquidado, DeduccionIncrementadaDetail,
+from ganancias.models import (AporteLiquidado, Concepto, ConceptoLiquidado,
+                              DeduccionEmpleado, DeduccionIncrementadaDetail,
                               Empleado, Empresa, OtrosConceptos, PeriodoDeduccionIncrementada,
                               TablaArt94)
 
 
-admin.site.register(ConceptoLiquidado)
 admin.site.register(OtrosConceptos)
 admin.site.register(PeriodoDeduccionIncrementada)
 
@@ -75,3 +75,44 @@ class DeduccionIncrementadaDetailAdmin(admin.ModelAdmin):
     @admin.display(empty_value='unknown')
     def hasta(self, obj):
         return f'$ {"%.2f" % round(obj.to_value, 2)}'
+
+
+@admin.register(ConceptoLiquidado)
+class ConceptoLiquidadoAdmin(admin.ModelAdmin):
+    list_display = ("empleado", "concepto", "liquidacion", "importe")
+    list_filter = ("empleado", "concepto")
+    list_per_page = 30
+
+    @admin.display(empty_value='unknown')
+    def importe(self, obj):
+        return f'$ {"%.2f" % round(obj.from_value, 2)}'
+
+
+@admin.register(AporteLiquidado)
+class AporteLiquidadoAdmin(admin.ModelAdmin):
+    list_display = ("empleado", "aporte", "liquidacion", "importe")
+    list_filter = ("empleado", "aporte")
+    list_per_page = 30
+
+    @admin.display(empty_value='unknown')
+    def importe(self, obj):
+        return f'$ {"%.2f" % round(obj.from_value, 2)}'
+
+
+@admin.register(DeduccionEmpleado)
+class DeduccionEmpleadoAdmin(admin.ModelAdmin):
+    list_display = ("empleado", "deduccion", "desde", "hasta", "importe")
+    list_filter = ("empleado", "deduccion")
+    list_per_page = 30
+
+    @admin.display(empty_value='unknown')
+    def desde(self, obj):
+        return obj.validity_from.strftime('%Y/%m')
+
+    @admin.display(empty_value='unknown')
+    def hasta(self, obj):
+        return obj.validity_to.strftime('%Y/%m')
+
+    @admin.display(empty_value='unknown')
+    def importe(self, obj):
+        return f'$ {"%.2f" % round(obj.amount, 2)}'

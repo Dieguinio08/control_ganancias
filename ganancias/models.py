@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.forms.models import model_to_dict
 
+from deducciones.models import Deduccion
 from ganancias.validators import validate_cuil, validate_cuit, validate_name
 
 
@@ -123,10 +124,11 @@ class Liquidacion(models.Model):
 class ConceptoLiquidado(models.Model):
     empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
     concepto = models.ForeignKey(Concepto, on_delete=models.CASCADE)
-    importe = models.FloatField(default=0.0)
+    liquidacion = models.ForeignKey(Liquidacion, on_delete=models.CASCADE)
+    amount = models.FloatField(default=0.0)
 
     def __str__(self) -> str:
-        return f'{self.empleado.name} - {self.concepto.name} - $ {self.importe}'
+        return f'{self.empleado.name} - {self.concepto.name} - {self.liquidacion} - $ {self.amount}'
 
 
 class Aportes(models.Model):
@@ -142,6 +144,48 @@ class AportesPorcentaje(models.Model):
 
     def __str__(self) -> str:
         return f'{self.aporte.name} - {self.validity_from.strftime("%Y/%m")} - $ {self.valor}'
+
+
+class AporteLiquidado(models.Model):
+    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
+    aporte = models.ForeignKey(Aportes, on_delete=models.CASCADE)
+    liquidacion = models.ForeignKey(Liquidacion, on_delete=models.CASCADE)
+    amount = models.FloatField(default=0.0)
+
+    def __str__(self) -> str:
+        return f'{self.empleado.name} - {self.aporte.name} - {self.liquidacion} - $ {self.amount}'
+
+
+class DeduccionEmpleado(models.Model):
+    """ Deducción declaradas por empleado
+    """
+    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
+    deduccion = models.ForeignKey(Deduccion, on_delete=models.CASCADE)
+    validity_from = models.DateField(blank=True, null=True, verbose_name='Vigencia desde')
+    validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
+    name = models.CharField(max_length=120, verbose_name='Nombre - Razón Social', null=True, blank=True)
+    amount = models.FloatField(default=0.0, verbose_name='Importe')
+
+    def __str__(self) -> str:
+        resp = f'{self.empleado.name} - {self.deduccion.name} - {self.validity_from.strftime("%Y/%m")}'
+        resp += f' - {self.validity_to.strftime("%Y/%m")} - $ {self.amount}'
+        return resp
+
+    class Meta:
+        ordering = ['empleado', 'deduccion']
+        verbose_name_plural = 'Deducciones Empleado'
+
+
+class DeduccionPeriodo(models.Model):
+    """ Deducción considerada en el período por empleado
+    """
+    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
+    period = models.DateField()
+    deduccion = models.ForeignKey(Deduccion, on_delete=models.CASCADE)
+    amount = models.FloatField(default=0.0)
+
+    def __str__(self) -> str:
+        return f'{self.empleado.name} - {self.period.strftime("%Y/%m")} - {self.deduccion} - $ {self.amount}'
 
 
 class TablaArt94(models.Model):

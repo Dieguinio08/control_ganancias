@@ -2,8 +2,6 @@ import datetime
 from django.conf import settings
 from django.db import models
 
-from ganancias.models import Empleado
-
 # Deducción 'AN' para deduccions a tomar en la anual o final
 DEDUCCION_PERIODO = [
     ('AN', 'Anual'),
@@ -89,24 +87,6 @@ class Registro(models.Model):
 
     def __str__(self) -> str:
         return f'{self.id_reg.id} -{self.id_reg.reg_user} - {self.id_reg.fecha.strftime("%d/%m/%Y")} - {self.cuil}'
-
-
-class DeduccionEmpleado(models.Model):
-    empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
-    deduccion = models.ForeignKey(Deduccion, on_delete=models.CASCADE)
-    validity_from = models.DateField(blank=True, null=True, verbose_name='Vigencia desde')
-    validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
-    nombre = models.CharField(max_length=120, verbose_name='Nombre - Razón Social', null=True, blank=True)
-    value = models.FloatField(default=0.0, verbose_name='Importe')
-
-    def __str__(self) -> str:
-        resp = f'{self.empleado.name} - {self.deduccion.name} - {self.validity_from.strftime("%Y/%m")}'
-        resp += f' - {self.validity_to.strftime("%Y/%m")} - $ {self.value}'
-        return resp
-
-    class Meta:
-        ordering = ['empleado', 'deduccion']
-        verbose_name_plural = 'Deducciones Empleado'
 
 
 class TablaArt30(models.Model):

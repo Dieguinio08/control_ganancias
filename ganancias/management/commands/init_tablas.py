@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 
 from ganancias.models import (DeduccionIncrementadaDetail, OtrosConceptos,
                               PeriodoDeduccionIncrementada, TablaArt94)
-from ganancias.tablas.tablas import (DEDUCCION_INCREMENTADA, TABLA_ART_94,
+from ganancias.tables.tablas import (DEDUCCION_INCREMENTADA, TABLA_ART_94,
                                      TABLAS_OTROS_CONCEPTOS)
 
 

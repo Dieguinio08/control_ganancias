@@ -3,7 +3,7 @@ from datetime import date
 from django.core.management.base import BaseCommand
 
 from deducciones.models import Deduccion, TablaArt30
-from deducciones.tablas.tablas import TABLA_ART_30
+from deducciones.tables.tablas import TABLA_ART_30
 
 
 class Command(BaseCommand):

@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
     # Own apps
     'deducciones',
+    'f1357',
     'ganancias',
 ]
 

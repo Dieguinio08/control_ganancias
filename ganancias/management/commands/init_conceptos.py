@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from ganancias.models import Concepto
-from ganancias.tablas.conceptos import CONCEPTOS
+from ganancias.tables.conceptos import CONCEPTOS
 
 
 class Command(BaseCommand):
