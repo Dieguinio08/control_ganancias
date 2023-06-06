@@ -1,10 +1,10 @@
 from datetime import date
 from django.test import TestCase
 
-from deducciones.exceptions import DeduccionInexistenteException, DeduccionPeriodoException
+from deducciones.exceptions import DeduccionIncrementadaException, DeduccionInexistenteException, DeduccionPeriodoException
 from deducciones.management.commands.init_deducciones import Command as CommandDeducciones
 from deducciones.management.commands.init_tablas_d import Command as CommandTablasD
-from deducciones.utils.deducciones import get_deduccion_periodo
+from deducciones.utils.deducciones import get_deduccion_incrementada, get_deduccion_periodo
 
 
 class CalculosTesting(TestCase):
@@ -85,4 +85,40 @@ class CalculosTesting(TestCase):
             DeduccionPeriodoException,
             f'Deduccion {deduccion_tipo} - {codigo_siradig} no configurada para el período 1999/06',
             get_deduccion_periodo, deduccion_tipo, codigo_siradig, periodo
+        )
+
+    def test_calculo_deduccion_incrementada_ok_1(self):
+        periodo = date(2023, 1, 1)
+        remuneracion_base = 1000000.0
+        deduccion_incrementada = round(get_deduccion_incrementada(remuneracion_base, periodo), 2)
+        self.assertEqual(deduccion_incrementada, 0.0)
+
+    def test_calculo_deduccion_incrementada_ok_2(self):
+        periodo = date(2023, 1, 1)
+        remuneracion_base = 100000.0
+        deduccion_incrementada = round(get_deduccion_incrementada(remuneracion_base, periodo), 2)
+        self.assertEqual(deduccion_incrementada, 0.0)
+
+    def test_calculo_deduccion_incrementada_ok_3(self):
+        periodo = date(2023, 5, 1)
+        remuneracion_base = 514000.0
+        deduccion_incrementada = round(get_deduccion_incrementada(remuneracion_base, periodo), 2)
+        self.assertEqual(deduccion_incrementada, 170925.0)
+
+    def test_calculo_deduccion_incrementada_wrong_1(self):
+        periodo = date(2020, 5, 1)
+        remuneracion_base = 514000.0
+        self.assertRaisesMessage(
+            DeduccionIncrementadaException,
+            f'Período {periodo.strftime("%Y/%m")} no configurado',
+            get_deduccion_incrementada, remuneracion_base, periodo
+        )
+
+    def test_calculo_deduccion_incrementada_wrong_2(self):
+        periodo = date(2120, 5, 1)
+        remuneracion_base = 514000.0
+        self.assertRaisesMessage(
+            DeduccionIncrementadaException,
+            f'Período {periodo.strftime("%Y/%m")} no configurado',
+            get_deduccion_incrementada, remuneracion_base, periodo
         )
