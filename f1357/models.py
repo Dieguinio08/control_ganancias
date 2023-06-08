@@ -12,8 +12,9 @@ class Group(models.Model):
 
 class F1357Field(models.Model):
     name = models.CharField(max_length=60, unique=True, primary_key=True, verbose_name='Nombre')
+    long_name = models.CharField(max_length=120, verbose_name='Nombre largo')
     description = models.CharField(max_length=120, blank=True, null=True, verbose_name='Descripción')
     group = models.ForeignKey(Group, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self) -> str:
-        return self.name
+        return self.long_name

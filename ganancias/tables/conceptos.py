@@ -1,8 +1,37 @@
 
 
+APORTES = {
+    'jubilacion': {
+        'long_name': 'Jubilación',
+        'f1357field': 'jubilacion',
+    },
+    'obra_social': {
+        'long_name': 'Obra Social',
+        'f1357field': 'obra_social',
+    },
+    'cuota_sindical': {
+        'long_name': 'Cuota Sindical',
+        'f1357field': 'cuota_sindical',
+    },
+    'oe_jubilacion': {
+        'long_name': 'Jubilación Otros Empleos',
+        'f1357field': 'oe_jubilacion',
+    },
+    'oe_obra_social': {
+        'long_name': 'Obra Social Otros Empleos',
+        'f1357field': 'oe_obra_social',
+    },
+    'oe_cuota_sindical': {
+        'long_name': 'Cuota Sindical Otros Empleos',
+        'f1357field': 'oe_cuota_sindical',
+    },
+}
+
+
 CONCEPTOS = {
-    'Remuneración bruta gravada': {},
+    'Remuneración bruta gravada': {'f1357field': 'rem_gravada'},
     'No Remunerativo bruto gravada': {
+        'f1357field': 'rem_gravada',
         'tipo_concepto': 'NOREM',
     },
     'Retribuciones no habituales gravada': {
@@ -33,14 +62,14 @@ CONCEPTOS = {
             'dias': 'INHAB',
         }
     },
-    'Gastos Movilidad': {},
-    'Gastos Viaticos': {},
-    'Gastos otras compensaciones análogas': {},
-    'Gastos Movilidad Larga Distancia': {},
-    'Gastos Viaticos Larga Distancia': {},
-    'Gastos Movilidad Larga Distancia CCT 40/89': {},
-    'Gastos Viaticos Larga Distancia CCT 40/89': {},
-    'Gastos otras comp analogas Larga Distancia CCT 40/89': {},
+    'Gastos Movilidad': {'f1357field': 'viaticos_gravado'},
+    'Gastos Viaticos': {'f1357field': 'viaticos_gravado'},
+    'Gastos otras compensaciones análogas': {'f1357field': 'viaticos_gravado'},
+    'Gastos Movilidad Larga Distancia': {'f1357field': 'viaticos_gravado'},
+    'Gastos Viaticos Larga Distancia': {'f1357field': 'viaticos_gravado'},
+    'Gastos Movilidad Larga Distancia CCT 40/89': {'f1357field': 'viaticos_gravado'},
+    'Gastos Viaticos Larga Distancia CCT 40/89': {'f1357field': 'viaticos_gravado'},
+    'Gastos otras comp analogas Larga Distancia CCT 40/89': {'f1357field': 'viaticos_gravado'},
     'Material didáctico personal docente': {},
     'Bonos de productividad gravados': {
         'habitualidad': 'NH',
@@ -48,9 +77,11 @@ CONCEPTOS = {
     'Fallos de caja gravados': {},
     'Conceptos de similar naturaleza gravados': {},
     'Remuneración exenta o no alcanzada': {
+        'f1357field': 'rem_exenta',
         'exento': True,
     },
     'No remunerativo exento o no alcanzado': {
+        'f1357field': 'rem_exenta',
         'tipo_concepto': 'NOREM',
         'exento': True,
     },
@@ -63,26 +94,33 @@ CONCEPTOS = {
         'exento': True,
     },
     'Remuneración exenta Ley N° 27.718': {
+        'f1357field': 'l27718_exento',
         'exento': True,
     },
     'Bonos de productividad exentos': {
+        'f1357field': 'bonos_prod_exento',
         'habitualidad': 'NH',
         'exento': True,
     },
     'Fallos de caja exentos': {
+        'f1357field': 'fallos_caja_exento',
         'exento': True,
     },
     'Conceptos de similar naturaleza exentos': {
+        'f1357field': 'sim_nat_exento',
         'exento': True,
     },
     'Suplementos particulares artículo 57 de la Ley N° 19.101 exentos': {
+        'f1357field': 'l19101_exento',
         'exento': True,
     },
     'Compensación gastos de teletrabajo exentos': {
+        'f1357field': 'teletrabajo_exento',
         'habitualidad': 'NH',
         'exento': True,
     },
     'Ajustes períodos anteriores - Remuneración gravada': {
+        'f1357field': 'ajuste_per_ant_gravado',
         'habitualidad': 'NH',
     },
     'Ajustes NR períodos anteriores - No remunerativo gravado': {
@@ -99,8 +137,9 @@ CONCEPTOS = {
         'habitualidad': 'NH',
     },
     # Otros Empleos -----------------------------------------------------------
-    'OE Remuneración bruta gravada': {'others': True},
+    'OE Remuneración bruta gravada': {'others': True, 'f1357field': 'oe_rem_gravada'},
     'OE No Remunerativo bruto gravada': {
+        'f1357field': 'oe_rem_gravada',
         'others': True,
         'tipo_concepto': 'NOREM',
     },
@@ -128,26 +167,24 @@ CONCEPTOS = {
             'dias': 'READY',
         }
     },
-    'OE Gastos Movilidad': {'others': True},
-    'OE Gastos Viaticos': {'others': True},
-    'OE Gastos otras compensaciones análogas': {'others': True},
-    'OE Gastos Movilidad Larga Distancia': {'others': True},
-    'OE Gastos Viaticos Larga Distancia': {'others': True},
-    'OE Gastos Movilidad Larga Distancia CCT 40/89': {'others': True},
-    'OE Gastos Viaticos Larga Distancia CCT 40/89': {'others': True},
-    'OE Gastos otras comp analogas Larga Distancia CCT 40/89': {'others': True},
+    'OE Gastos Movilidad y viáticos': {'others': True, 'f1357field': 'oe_viaticos_gravado'},
     'OE Material didáctico personal docente': {'others': True},
     'OE Bonos de productividad gravados': {
         'others': True,
         'habitualidad': 'NH',
     },
-    'OE Fallos de caja gravados': {'others': True},
-    'OE Conceptos de similar naturaleza gravados': {'others': True},
+    'OE Fallos de caja gravados': {'others': True, 'f1357field': 'oe_fallos_caja_gravado'},
+    'OE Conceptos de similar naturaleza gravados': {
+        'others': True,
+        'f1357field': 'oe_sim_nat_gravado',
+    },
     'OE Remuneración exenta o no alcanzada': {
+        'f1357field': 'oe_rem_exenta',
         'others': True,
         'exento': True,
     },
     'OE No remunerativo exento o no alcanzado': {
+        'f1357field': 'oe_rem_exenta',
         'others': True,
         'tipo_concepto': 'NOREM',
         'exento': True,
@@ -163,27 +200,33 @@ CONCEPTOS = {
         'exento': True,
     },
     'OE Remuneración exenta Ley N° 27.718': {
+        'f1357field': 'oe_l27718_exento',
         'others': True,
         'exento': True,
     },
     'OE Bonos de productividad exentos': {
+        'f1357field': 'oe_bonos_prod_exento',
         'others': True,
         'habitualidad': 'NH',
         'exento': True,
     },
     'OE Fallos de caja exentos': {
+        'f1357field': 'oe_fallos_caja_exento',
         'others': True,
         'exento': True,
     },
     'OE Conceptos de similar naturaleza exentos': {
+        'f1357field': 'oe_sim_nat_exento',
         'others': True,
         'exento': True,
     },
     'OE Suplementos particulares artículo 57 de la Ley N° 19.101 exentos': {
+        'f1357field': 'oe_l19101_exento',
         'others': True,
         'exento': True,
     },
     'OE Compensación gastos de teletrabajo exentos': {
+        'f1357field': 'oe_teletrabajo_exento',
         'others': True,
         'habitualidad': 'NH',
         'exento': True,

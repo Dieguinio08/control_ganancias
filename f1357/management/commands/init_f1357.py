@@ -6,7 +6,7 @@ from f1357.tables.schema import F1357_SCHEMA
 
 class Command(BaseCommand):
     help = 'Completar las deducciones en la base de datos'
-    Group.objects.all().delete()
+    # Group.objects.all().delete()
 
     def handle(self, *args, **options):
         # Main Groups - for instance: 'remuneracion', 'deducciones'
@@ -19,7 +19,7 @@ class Command(BaseCommand):
             if isinstance(values_0, list):
                 for value_0 in values_0:
                     if F1357Field.objects.filter(name=value_0[0]).count() == 0:
-                        F1357Field.objects.create(name=value_0[0], description=value_0[1], group=parent_id_1)
+                        F1357Field.objects.create(name=value_0[0], long_name=value_0[1], group=parent_id_1)
                         self.stdout.write(self.style.SUCCESS(f'Campo {value_0[0]} agregado'))
                 continue
 
@@ -32,7 +32,7 @@ class Command(BaseCommand):
                 if isinstance(values, list):
                     for value in values:
                         if F1357Field.objects.filter(name=value[0]).count() == 0:
-                            F1357Field.objects.create(name=value[0], description=value[1], group=parent_id_2)
+                            F1357Field.objects.create(name=value[0], long_name=value[1], group=parent_id_2)
                             self.stdout.write(self.style.SUCCESS(f'Campo {value[0]} agregado'))
                     continue
 
@@ -44,7 +44,7 @@ class Command(BaseCommand):
                     if isinstance(values_2, list):
                         for value_2 in values_2:
                             if F1357Field.objects.filter(name=value_2[0]).count() == 0:
-                                F1357Field.objects.create(name=value_2[0], description=value_2[1], group=parent_id_3)
+                                F1357Field.objects.create(name=value_2[0], long_name=value_2[1], group=parent_id_3)
                                 self.stdout.write(self.style.SUCCESS(f'Campo {value_2[0]} agregado'))
                     else:
                         self.stdout(self.style.ERROR('Error en el esquema de la tabla F1357'))

@@ -50,8 +50,8 @@ jobs:
 
     - name: Test commands to init DB 
       run: |
+        python manage.py init_f1357
         python manage.py init_deducciones
         python manage.py init_conceptos
         python manage.py init_tablas_d
         python manage.py init_tablas
-        python manage.py init_f1357

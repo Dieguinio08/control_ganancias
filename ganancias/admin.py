@@ -1,15 +1,16 @@
 from django.contrib import admin
 
-from ganancias.models import (AporteLiquidado, Concepto, ConceptoLiquidado,
-                              DeduccionEmpleado, OtrosConceptos, TablaArt94)
+from ganancias.models import (Aporte, AporteLiquidado, Concepto, ConceptoLiquidado,
+                              DeduccionEmpleado, Liquidacion, OtrosConceptos, TablaArt94)
 
 
+admin.site.register(Aporte)
 admin.site.register(OtrosConceptos)
 
 
 @admin.register(Concepto)
 class ConceptoAdmin(admin.ModelAdmin):
-    list_display = ("name", "tipo_concepto", "periodicidad", "habitualidad")
+    list_display = ("long_name", "tipo_concepto", "periodicidad", "habitualidad")
     list_filter = ("tipo_concepto", 'habitualidad')
     list_per_page = 30
 
@@ -49,7 +50,7 @@ class ConceptoLiquidadoAdmin(admin.ModelAdmin):
 
     @admin.display(empty_value='unknown')
     def importe(self, obj):
-        return f'$ {"%.2f" % round(obj.from_value, 2)}'
+        return f'$ {"%.2f" % round(obj.amount, 2)}'
 
 
 @admin.register(AporteLiquidado)
@@ -80,3 +81,18 @@ class DeduccionEmpleadoAdmin(admin.ModelAdmin):
     @admin.display(empty_value='unknown')
     def importe(self, obj):
         return f'$ {"%.2f" % round(obj.amount, 2)}'
+
+
+@admin.register(Liquidacion)
+class LiquidacionAdmin(admin.ModelAdmin):
+    list_display = ("nro_liq", "periodo", "fecha_pago")
+    list_display_links = ("periodo", "fecha_pago")
+    list_per_page = 30
+
+    @admin.display(empty_value='unknown')
+    def periodo(self, obj):
+        return obj.period.strftime('%Y/%m')
+
+    @admin.display(empty_value='unknown')
+    def fecha_pago(self, obj):
+        return obj.payday.strftime('%Y/%m')

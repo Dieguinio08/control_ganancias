@@ -6,6 +6,7 @@ from empresa.models import Empleado, Empresa
 @admin.register(Empleado)
 class EmpleadoAdmin(admin.ModelAdmin):
     list_display = ("leg", "name", "empresa", "cuil")
+    list_display_links = ('name',)
     list_filter = ("empresa",)
     list_per_page = 30
 

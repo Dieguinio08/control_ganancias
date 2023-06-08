@@ -18,7 +18,7 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(F1357Field)
 class F1357FieldAdmin(admin.ModelAdmin):
-    list_display = ("name", "description", "group", "group_parent")
+    list_display = ("long_name", "description", "group", "group_parent")
     list_filter = ("group", "group__parent_id", "group__parent_id__parent_id")
     list_per_page = 30
 

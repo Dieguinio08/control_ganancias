@@ -2,6 +2,7 @@ from django.db import models
 
 from deducciones.models import Deduccion
 from empresa.models import Empleado
+from f1357.models import F1357Field
 
 
 HABITUALIDAD = [
@@ -27,32 +28,35 @@ OTROS_CONCEPTOS = [
 
 
 class Concepto(models.Model):
+    name = models.CharField(max_length=120, verbose_name='Nombre')
+    long_name = models.CharField(max_length=120, verbose_name='Nombre Largo')
     tipo_concepto = models.CharField(max_length=5, choices=TIPO_CONCEPTO, default='REM')
     periodicidad = models.CharField(max_length=2, choices=PERIODICIDAD, default='ME')
-    name = models.CharField(max_length=100, verbose_name='Nombre', null=True, blank=True)
     habitualidad = models.CharField(max_length=2, default='HA')
     exento = models.BooleanField(default=False)
     others = models.BooleanField(default=False, verbose_name='Otros Empleos')
+    f1357field = models.ForeignKey(F1357Field, on_delete=models.SET_NULL, null=True, blank=True)
     extras = models.JSONField(default=dict)
 
     def __str__(self) -> str:
-        return self.name
+        return self.long_name
 
     class Meta:
         ordering = ['others', 'exento', 'tipo_concepto', 'name']
 
 
 class Liquidacion(models.Model):
+    nro_liq = models.PositiveSmallIntegerField(default=1)
     period = models.DateField()
     payday = models.DateField()
 
     def __str__(self) -> str:
-        return f'{self.period.strftime("%Y/%m")} - {self.payday.strftime("%Y/%m/%d")}'
+        return f'{self.nro_liq}) {self.period.strftime("%Y/%m")} - {self.payday.strftime("%Y/%m/%d")}'
 
     class Meta:
         ordering = ['payday']
         verbose_name_plural = 'Liquidaciones'
-        unique_together = [['period', 'payday']]
+        unique_together = [['nro_liq', 'period', 'payday']]
 
 
 class ConceptoLiquidado(models.Model):
@@ -65,13 +69,18 @@ class ConceptoLiquidado(models.Model):
         return f'{self.empleado.name} - {self.concepto.name} - {self.liquidacion} - $ {self.amount}'
 
 
-class Aportes(models.Model):
-    name = models.CharField(max_length=120, verbose_name='Nombre')
+class Aporte(models.Model):
+    name = models.CharField(max_length=120, unique=True, primary_key=True, verbose_name='Nombre')
+    long_name = models.CharField(max_length=120, verbose_name='Nombre Largo')
     descripcion = models.CharField(max_length=120, blank=True, null=True, verbose_name='Descripción')
+    f1357field = models.ForeignKey(F1357Field, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return self.long_name
 
 
 class AportesPorcentaje(models.Model):
-    aporte = models.ForeignKey(Aportes, on_delete=models.CASCADE)
+    aporte = models.ForeignKey(Aporte, on_delete=models.CASCADE)
     valor = models.FloatField(default=0.0)
     validity_from = models.DateField(blank=True, null=True, verbose_name='Vigencia desde')
     validity_to = models.DateField(blank=True, null=True, verbose_name='Vigencia hasta')
@@ -82,12 +91,16 @@ class AportesPorcentaje(models.Model):
 
 class AporteLiquidado(models.Model):
     empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE)
-    aporte = models.ForeignKey(Aportes, on_delete=models.CASCADE)
+    aporte = models.ForeignKey(Aporte, on_delete=models.CASCADE)
     liquidacion = models.ForeignKey(Liquidacion, on_delete=models.CASCADE)
     amount = models.FloatField(default=0.0)
 
     def __str__(self) -> str:
         return f'{self.empleado.name} - {self.aporte.name} - {self.liquidacion} - $ {self.amount}'
+
+    class Meta:
+        ordering = ['liquidacion', 'empleado', 'aporte']
+        verbose_name_plural = 'Aportes Liquidados'
 
 
 class DeduccionEmpleado(models.Model):
