@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.test import Client, TestCase
 
 from empresa.exceptions import CuitValidationException, NameValidationException
@@ -48,3 +49,9 @@ class EmpleadoTesting(TestCase):
     def test_create_empleado_empty_cuit(self):
         with self.assertRaisesMessage(CuitValidationException, "El CUIL debe tener 11 caracteres"):
             Empleado.objects.create(leg=1, empresa=self.empresa, name="Empleado 1", cuil='')
+
+    def test_create_duplicated_empleado(self):
+        Empleado.objects.create(leg=1, empresa=self.empresa, name="Empleado Duplicado", cuil='20999999991')
+
+        with self.assertRaisesMessage(IntegrityError, "UNIQUE constraint failed"):
+            Empleado.objects.create(leg=1, empresa=self.empresa, name="Empleado Duplicado", cuil='20999999991')
