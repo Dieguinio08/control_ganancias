@@ -50,8 +50,16 @@ class EmpleadoTesting(TestCase):
         with self.assertRaisesMessage(CuitValidationException, "El CUIL debe tener 11 caracteres"):
             Empleado.objects.create(leg=1, empresa=self.empresa, name="Empleado 1", cuil='')
 
-    def test_create_duplicated_empleado(self):
+    def test_create_duplicated_empleado_1(self):
         Empleado.objects.create(leg=1, empresa=self.empresa, name="Empleado Duplicado", cuil='20999999991')
 
         with self.assertRaisesMessage(IntegrityError, "UNIQUE constraint failed"):
             Empleado.objects.create(leg=1, empresa=self.empresa, name="Empleado Duplicado", cuil='20999999991')
+
+    def test_create_duplicated_empleado_2(self):
+        Empleado.objects.create(leg=1, empresa=self.empresa, name="Empleado Duplicado", cuil='20999999991')
+        empleado_2 = Empleado.objects.create(leg=2, empresa=self.empresa, name="Empleado casi Duplicado", cuil='20999999991')
+
+        with self.assertRaisesMessage(IntegrityError, "UNIQUE constraint failed"):
+            empleado_2.leg = 1
+            empleado_2.save()
