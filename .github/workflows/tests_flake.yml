@@ -45,6 +45,7 @@ jobs:
 
     - name: Check pending migrations
       run: |
+        cd ganancias_app
         python manage.py makemigrations --check --dry-run
         python manage.py migrate
 
