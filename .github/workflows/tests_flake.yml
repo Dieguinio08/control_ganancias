@@ -49,12 +49,20 @@ jobs:
         python manage.py makemigrations --check --dry-run
         python manage.py migrate
 
+    - name: Check pending static files to collect
+      run: |
+        cd ganancias_app
+        python manage.py collectstatic --noinput
+        git diff --exit-code static/
+
     - name: Run Tests
       run: |
+        cd ganancias_app
         python manage.py test
 
     - name: Test commands to init DB 
       run: |
+        cd ganancias_app
         python manage.py init_f1357
         python manage.py init_deducciones
         python manage.py init_conceptos
