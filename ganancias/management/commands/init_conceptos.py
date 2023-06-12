@@ -27,7 +27,7 @@ class Command(BaseCommand):
                 Concepto.objects.create(name=concepto_name, **CONCEPTOS[concepto])
                 self.stdout.write(self.style.SUCCESS(f'Concepto {concepto} agregado'))
             else:
-                if this_concepto[0].f1357field != CONCEPTOS[concepto]['f1357field']:
+                if this_concepto[0].f1357field != CONCEPTOS[concepto].get('f1357field'):
                     this_concepto.update(**CONCEPTOS[concepto])
                     self.stdout.write(self.style.SUCCESS(f'{concepto} actualizado'))
                 else:
