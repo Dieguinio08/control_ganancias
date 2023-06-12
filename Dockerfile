@@ -9,9 +9,10 @@ RUN pip install -r requirements.txt
 RUN pip install -r requirements.psql.txt
 RUN pip install -r requirements_server.txt
 
-COPY . ./
+COPY ./ganancias_app ./app
+RUN mv ./app/ganancias_pr/local_settings_docker.py ./app/ganancias_pr/local_settings.py
 
-WORKDIR /
+WORKDIR /app
 
 COPY ./server/entrypoint.sh /
 ENTRYPOINT ["sh", "/entrypoint.sh"]
