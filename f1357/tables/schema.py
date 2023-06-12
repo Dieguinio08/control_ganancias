@@ -102,11 +102,9 @@ F1357_SCHEMA = {
                 ('deduccion_especial', 'Deducción especial'),
                 ('deduccion_especifica', 'Deducción específica'),
                 ('ded_incrementada_rango1',
-                    'Deducción especial incrementada, primera parte, del penúltimo párrafo del inc. c) del art. 30 \
-                    de la ley del gravamen'),
+                    'Deducción especial incrementada, 1° parte penúltimo p. inc. c) del art. 30 de ley'),
                 ('ded_incrementada_rango2',
-                    'Deducción especial incrementada, segunda parte, del penúltimo párrafo del inc. c) del art. 30 \
-                    de la ley del gravamen'),
+                    'Deducción especial incrementada, 2° parte penúltimo p. inc. c) del art. 30 de ley'),
             ],
             'cargas_de_familia': [
                 ('conyuge', 'Cónyuge/Unión Convivencial'),
